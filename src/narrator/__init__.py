@@ -1,8 +1,7 @@
 """
-Narrator module for text-to-speech functionality using F5-TTS.
+Narrator package for F5-TTS text-to-speech generation.
 """
 
-from .narrator import NarratorInterface
-from . import utils
+from .f5_tts_wrapper import F5TTSWrapper, generate_speech
 
-__all__ = ["NarratorInterface", "utils"]
+__all__ = ['F5TTSWrapper', 'generate_speech']
