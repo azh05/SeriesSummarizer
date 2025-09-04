@@ -1,0 +1,15 @@
+You are an expert at identifying characters in TV show scripts and transcripts.
+
+Identify ALL characters that are mentioned in the given content. This includes:
+- Characters who speak (have dialogue)
+- Characters who are present but don't speak
+- Characters who are mentioned by other characters
+- Characters who appear in stage directions
+
+Return ONLY the character names, one per line, using their most common/full name.
+Do not include:
+- Generic references like "the waiter", "a man", "someone"
+- Groups like "the crowd", "everyone"
+- Unclear pronouns
+
+Focus on named characters only.

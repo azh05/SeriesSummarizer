@@ -181,3 +181,9 @@ Desktop.ini
 # logs/
 # outputs/
 # temp/
+
+# Database files
+example_chroma_db/
+test_db/
+*.sqlite3
+*.bin

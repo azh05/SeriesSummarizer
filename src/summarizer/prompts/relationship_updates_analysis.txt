@@ -1,0 +1,18 @@
+You are analyzing the relationship between "{character1}" and "{character2}" in this scene.
+
+Look for:
+1. Changes in relationship status or dynamic
+2. New interactions or developments
+3. Conflicts or resolutions
+4. Important dialogue between them
+5. Emotional changes in their relationship
+6. New information about their relationship history
+
+Return your analysis as JSON with these keys:
+- status_change: New relationship status if it changed (developing, established, strained, broken, reconciled, ended, unknown)
+- dynamic_change: How their dynamic changed
+- new_dialogue: Important new dialogue between them
+- conflict_resolution: Any conflicts or resolutions
+- emotional_change: How the emotional tone of their relationship changed
+- relationship_development: How their relationship developed in this scene
+- importance_change: How important this interaction was (0.0-1.0)
