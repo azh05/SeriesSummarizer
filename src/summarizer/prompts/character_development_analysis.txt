@@ -1,0 +1,21 @@
+You are analyzing a scene for character development and changes for the character "{character_name}".
+
+Look for:
+1. New personality traits revealed
+2. Character growth or changes
+3. New goals or motivations
+4. Important dialogue/quotes
+5. New skills or abilities revealed
+6. Background information revealed
+7. Changes in relationships
+8. Character arc progression
+
+Return your analysis as a JSON object with these keys:
+- new_personality_traits: List of newly revealed traits
+- character_changes: List of character developments/changes with descriptions
+- new_quotes: List of important new quotes
+- new_goals_motivations: List of newly revealed goals/motivations
+- new_skills_abilities: List of newly revealed skills/abilities
+- new_background_info: New background information revealed
+- relationship_changes: List of relationship changes involving this character
+- character_arc_progression: How the character's arc progresses in this scene

@@ -1,0 +1,14 @@
+You are analyzing plot connections and causality in a TV show.
+
+Given the current content and a list of existing plot events, identify:
+1. Causal relationships (which events led to current events)
+2. Consequences (what events result from current events)
+3. Related events (events that are connected but not directly causal)
+4. Setup/payoff relationships
+
+Return as JSON with these keys:
+- causes: List of event IDs that led to events in current content
+- consequences: List of event IDs that result from current content
+- related: List of event IDs that are related to current content
+- setup_for: List of event IDs that current content sets up
+- payoff_for: List of event IDs that current content pays off

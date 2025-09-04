@@ -5,6 +5,7 @@ from typing import List, Dict, Any, Optional, Tuple
 
 from .base_extractor import BaseExtractor
 from ..models import Relationship, RelationshipType, RelationshipStatus
+from ..utils import load_prompt, load_prompt_template
 
 
 logger = logging.getLogger(__name__)
@@ -83,24 +84,7 @@ class RelationshipExtractor(BaseExtractor):
         episode_id = context.get("episode_id", "unknown") if context else "unknown"
         scene_id = context.get("scene_id") if context else None
         
-        system_prompt = f"""You are analyzing the relationship between "{character1}" and "{character2}" in this scene.
-
-        Look for:
-        1. Changes in relationship status or dynamic
-        2. New interactions or developments
-        3. Conflicts or resolutions
-        4. Important dialogue between them
-        5. Emotional changes in their relationship
-        6. New information about their relationship history
-
-        Return your analysis as JSON with these keys:
-        - status_change: New relationship status if it changed (developing, established, strained, broken, reconciled, ended, unknown)
-        - dynamic_change: How their dynamic changed
-        - new_dialogue: Important new dialogue between them
-        - conflict_resolution: Any conflicts or resolutions
-        - emotional_change: How the emotional tone of their relationship changed
-        - relationship_development: How their relationship developed in this scene
-        - importance_change: How important this interaction was (0.0-1.0)"""
+        system_prompt = load_prompt_template("relationship_updates_analysis", character1=character1, character2=character2)
         
         user_prompt = f"""Analyze the relationship between {character1} and {character2} in this content:
 
@@ -135,18 +119,7 @@ class RelationshipExtractor(BaseExtractor):
         if len(characters) < 2:
             return []
         
-        system_prompt = """You are identifying which characters interact with each other in the given content.
-
-        Look for:
-        - Direct dialogue between characters
-        - Characters mentioned together in stage directions
-        - Characters reacting to each other
-        - Characters in the same scene interacting
-
-        Return pairs of characters that have meaningful interactions, one pair per line in the format:
-        Character1 | Character2
-
-        Only include pairs that actually interact, not just characters who happen to be present."""
+        system_prompt = load_prompt("relationship_pairs_identification")
         
         characters_list = "\n".join(f"- {char}" for char in characters)
         user_prompt = f"""Identify which character pairs interact in this content:
@@ -195,19 +168,7 @@ class RelationshipExtractor(BaseExtractor):
         Returns:
             Dictionary with relationship details or None
         """
-        system_prompt = f"""You are analyzing the relationship between "{char1}" and "{char2}" from their interactions in the given content.
-
-        Determine:
-        1. Relationship type (family, romantic, friendship, rivalry, professional, mentor_student, enemy, acquaintance, alliance, complicated)
-        2. Current status (developing, established, strained, broken, reconciled, ended, unknown)
-        3. Description of their relationship
-        4. How they met (if mentioned or implied)
-        5. Relationship dynamic (how they interact)
-        6. Key dialogue between them
-        7. Importance score (0.0-1.0, how important is this relationship?)
-        8. Emotional intensity (0.0-1.0, how emotionally charged is their relationship?)
-
-        Return as JSON. If they don't seem to have a meaningful relationship, return null."""
+        system_prompt = load_prompt_template("relationship_detail_extraction", char1=char1, char2=char2)
         
         user_prompt = f"""Analyze the relationship between {char1} and {char2} from this content:
 

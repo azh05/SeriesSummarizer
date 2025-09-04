@@ -5,6 +5,7 @@ from typing import List, Dict, Any, Optional
 
 from .base_extractor import BaseExtractor
 from ..models import PlotEvent, EventType, EventImportance
+from ..utils import load_prompt
 
 
 logger = logging.getLogger(__name__)
@@ -85,20 +86,7 @@ class PlotEventExtractor(BaseExtractor):
         Returns:
             Dictionary with event connections (causes, consequences, related)
         """
-        system_prompt = f"""You are analyzing plot connections and causality in a TV show.
-
-        Given the current content and a list of existing plot events, identify:
-        1. Causal relationships (which events led to current events)
-        2. Consequences (what events result from current events)
-        3. Related events (events that are connected but not directly causal)
-        4. Setup/payoff relationships
-
-        Return as JSON with these keys:
-        - causes: List of event IDs that led to events in current content
-        - consequences: List of event IDs that result from current content
-        - related: List of event IDs that are related to current content
-        - setup_for: List of event IDs that current content sets up
-        - payoff_for: List of event IDs that current content pays off"""
+        system_prompt = load_prompt("plot_connections_analysis")
         
         existing_events_str = "\n".join(f"- {event_id}" for event_id in existing_events)
         user_prompt = f"""Analyze plot connections for this content:
@@ -139,29 +127,7 @@ class PlotEventExtractor(BaseExtractor):
         Returns:
             List of plot event data dictionaries
         """
-        system_prompt = """You are an expert story analyst identifying plot events in TV show content.
-
-        Identify ALL significant plot events that occur in the given content. For each event, determine:
-
-        1. Title (brief, descriptive name)
-        2. Description (what happens)
-        3. Type (main_plot, subplot, character_development, world_building, mystery_clue, mystery_resolution, 
-                conflict_introduction, conflict_escalation, conflict_resolution, revelation, twist, 
-                cliffhanger, flashback, foreshadowing, callback)
-        4. Importance (critical, high, medium, low)
-        5. Characters involved
-        6. Plot arc (if part of a larger storyline)
-        7. Themes explored
-        8. Emotional impact (0.0-1.0)
-        9. Plot significance (0.0-1.0)
-        10. Mystery elements (if any)
-        11. Information revealed
-        12. Questions raised
-        13. Questions answered
-        14. Foreshadowing clues
-        15. Tags for categorization
-
-        Return as a JSON array of events. If no significant events occur, return an empty array."""
+        system_prompt = load_prompt("plot_event_identification")
         
         location_info = f" in scene {scene_id}" if scene_id else ""
         user_prompt = f"""Identify plot events in this content from episode {episode_id}{location_info}:

@@ -17,6 +17,12 @@ from .validation import (
     validate_database_config,
     validate_search_query
 )
+from .prompt_loader import (
+    PromptLoader,
+    get_prompt_loader,
+    load_prompt,
+    load_prompt_template
+)
 
 __all__ = [
     "retry_with_backoff", 
@@ -31,5 +37,9 @@ __all__ = [
     "DatabaseError", 
     "ValidationError",
     "validate_groq_key",
-    "validate_openai_key"  # Keep for backward compatibility
+    "validate_openai_key",  # Keep for backward compatibility
+    "PromptLoader",
+    "get_prompt_loader",
+    "load_prompt",
+    "load_prompt_template"
 ]

@@ -1,0 +1,12 @@
+You are identifying which characters interact with each other in the given content.
+
+Look for:
+- Direct dialogue between characters
+- Characters mentioned together in stage directions
+- Characters reacting to each other
+- Characters in the same scene interacting
+
+Return pairs of characters that have meaningful interactions, one pair per line in the format:
+Character1 | Character2
+
+Only include pairs that actually interact, not just characters who happen to be present.

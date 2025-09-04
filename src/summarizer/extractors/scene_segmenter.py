@@ -6,6 +6,7 @@ import re
 
 from .base_extractor import BaseExtractor
 from ..models import Scene, EmotionalTone
+from ..utils import load_prompt
 
 
 logger = logging.getLogger(__name__)
@@ -78,22 +79,7 @@ class SceneSegmenter(BaseExtractor):
         Returns:
             List of scene segments
         """
-        system_prompt = """You are an expert at identifying scene breaks in TV show transcripts. 
-        
-        Your task is to analyze a transcript and identify natural scene breaks. Scene breaks typically occur when:
-        - Location changes (indoor to outdoor, different rooms, different buildings)
-        - Time jumps (later that day, next morning, flashbacks)
-        - Character group changes (different set of characters in focus)
-        - Narrative shifts (different storylines, perspective changes)
-        
-        Look for common indicators:
-        - Stage directions like "FADE IN:", "CUT TO:", "INTERIOR:", "EXTERIOR:"
-        - Time indicators like "LATER", "MEANWHILE", "THE NEXT DAY"
-        - Location descriptions
-        - Character entrance/exit patterns
-        
-        Return the transcript split into scenes, with each scene as a separate item.
-        Use "---SCENE_BREAK---" as the delimiter between scenes."""
+        system_prompt = load_prompt("scene_break_identification")
         
         user_prompt = f"""Please identify scene breaks in this transcript and split it into individual scenes:
 
@@ -131,47 +117,7 @@ class SceneSegmenter(BaseExtractor):
         Returns:
             Dictionary with scene analysis
         """
-        system_prompt = """You are an expert TV script analyst. Analyze the given scene and extract key information.
-
-        CRITICAL: You must return ONLY a valid JSON object. Do not include any explanatory text before or after the JSON.
-
-        For each scene, identify:
-        1. Location/setting (where does this take place?)
-        2. Time of day (if mentioned or implied)
-        3. Characters present (list all characters who speak or are mentioned as present)
-        4. Key dialogue (most important/memorable lines)
-        5. Plot events (what happens that advances the story?)
-        6. Character developments (character growth, revelations, changes)
-        7. Relationship dynamics (interactions between characters, relationship changes)
-        8. Emotional tone (happy, sad, tense, romantic, comedic, dramatic, mysterious, action, peaceful, angry, fearful, nostalgic)
-        9. Mood description (overall atmosphere and feeling)
-        10. Plot relevance (0.0-1.0, how important is this scene to the main plot?)
-        11. Foreshadowing (hints about future events)
-        12. Callbacks (references to previous events)
-        13. Importance score (0.0-1.0, overall scene importance)
-        14. Themes (what themes are explored in this scene?)
-        15. Summary (2-3 sentence summary of what happens)
-
-        Return EXACTLY this JSON structure (replace values with your analysis):
-        {
-          "summary": "Brief summary here",
-          "location": "Location or null",
-          "time_of_day": "Time or null", 
-          "characters_present": ["Character1", "Character2"],
-          "key_dialogue": ["Important quote 1", "Important quote 2"],
-          "plot_events": ["Event 1", "Event 2"],
-          "character_developments": ["Development 1", "Development 2"],
-          "relationship_dynamics": ["Dynamic 1", "Dynamic 2"],
-          "emotional_tone": ["tone1", "tone2"],
-          "mood_description": "Mood description or null",
-          "plot_relevance": 0.7,
-          "foreshadowing": ["Foreshadowing 1", "Foreshadowing 2"],
-          "callbacks": ["Callback 1", "Callback 2"],
-          "importance_score": 0.8,
-          "themes": ["Theme 1", "Theme 2"]
-        }
-
-        Use empty arrays [] for lists with no items, null for missing values, and numbers for scores."""
+        system_prompt = load_prompt("scene_analysis")
         
         user_prompt = f"""Analyze this scene from episode {episode_id}, scene {scene_number}:
 

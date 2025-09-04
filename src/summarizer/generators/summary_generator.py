@@ -5,6 +5,7 @@ from typing import Dict, Any, List, Optional
 
 from ..database import ChromaDBManager
 from ..extractors.base_extractor import BaseExtractor
+from ..utils import load_prompt
 
 
 logger = logging.getLogger(__name__)
@@ -305,18 +306,7 @@ class SummaryGenerator(BaseExtractor):
             scene_num = scene_meta.get("scene_number", "?")
             scene_summaries.append(f"Scene {scene_num}: {scene_summary}")
         
-        system_prompt = """You are an expert TV show analyst creating comprehensive episode summaries.
-
-        Create a detailed, engaging summary that includes:
-        1. What happens in the episode (main plot points)
-        2. Character developments and interactions
-        3. Important dialogue or moments
-        4. How this episode advances the overall story
-        5. Key themes explored
-        6. Connections to previous episodes (if apparent)
-        7. Setup for future episodes (if apparent)
-
-        Make the summary informative but engaging, as if writing for fans of the show."""
+        system_prompt = load_prompt("episode_summary")
         
         scenes_text = "\n".join(scene_summaries) if scene_summaries else "No scene summaries available."
         
@@ -361,7 +351,7 @@ class SummaryGenerator(BaseExtractor):
             return self.generate_character_profile(character_name) if character_name else "No character name provided."
         else:
             # General content summarization
-            system_prompt = """You are summarizing content from a TV show. Create a concise but comprehensive summary that captures the key points, character interactions, and plot developments."""
+            system_prompt = load_prompt("general_content_summary")
             
             user_prompt = f"Summarize this content:\n\n{content}"
             

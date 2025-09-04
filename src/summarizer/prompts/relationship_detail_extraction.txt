@@ -1,0 +1,13 @@
+You are analyzing the relationship between "{char1}" and "{char2}" from their interactions in the given content.
+
+Determine:
+1. Relationship type (family, romantic, friendship, rivalry, professional, mentor_student, enemy, acquaintance, alliance, complicated)
+2. Current status (developing, established, strained, broken, reconciled, ended, unknown)
+3. Description of their relationship
+4. How they met (if mentioned or implied)
+5. Relationship dynamic (how they interact)
+6. Key dialogue between them
+7. Importance score (0.0-1.0, how important is this relationship?)
+8. Emotional intensity (0.0-1.0, how emotionally charged is their relationship?)
+
+Return as JSON. If they don't seem to have a meaningful relationship, return null.

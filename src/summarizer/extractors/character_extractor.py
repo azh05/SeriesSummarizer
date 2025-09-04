@@ -5,6 +5,7 @@ from typing import List, Dict, Any, Optional
 
 from .base_extractor import BaseExtractor
 from ..models import Character, CharacterRole
+from ..utils import load_prompt, load_prompt_template
 
 
 logger = logging.getLogger(__name__)
@@ -83,27 +84,7 @@ class CharacterExtractor(BaseExtractor):
         """
         episode_id = context.get("episode_id", "unknown") if context else "unknown"
         
-        system_prompt = f"""You are analyzing a scene for character development and changes for the character "{character_name}".
-
-        Look for:
-        1. New personality traits revealed
-        2. Character growth or changes
-        3. New goals or motivations
-        4. Important dialogue/quotes
-        5. New skills or abilities revealed
-        6. Background information revealed
-        7. Changes in relationships
-        8. Character arc progression
-
-        Return your analysis as a JSON object with these keys:
-        - new_personality_traits: List of newly revealed traits
-        - character_changes: List of character developments/changes with descriptions
-        - new_quotes: List of important new quotes
-        - new_goals_motivations: List of newly revealed goals/motivations
-        - new_skills_abilities: List of newly revealed skills/abilities
-        - new_background_info: New background information revealed
-        - relationship_changes: List of relationship changes involving this character
-        - character_arc_progression: How the character's arc progresses in this scene"""
+        system_prompt = load_prompt_template("character_development_analysis", character_name=character_name)
         
         user_prompt = f"""Analyze this content for character development of {character_name}:
 
@@ -136,21 +117,7 @@ class CharacterExtractor(BaseExtractor):
         Returns:
             List of character names
         """
-        system_prompt = """You are an expert at identifying characters in TV show scripts and transcripts.
-
-        Identify ALL characters that are mentioned in the given content. This includes:
-        - Characters who speak (have dialogue)
-        - Characters who are present but don't speak
-        - Characters who are mentioned by other characters
-        - Characters who appear in stage directions
-
-        Return ONLY the character names, one per line, using their most common/full name.
-        Do not include:
-        - Generic references like "the waiter", "a man", "someone"
-        - Groups like "the crowd", "everyone"
-        - Unclear pronouns
-
-        Focus on named characters only."""
+        system_prompt = load_prompt("character_identification")
         
         user_prompt = f"""Identify all characters mentioned in this content:
 
@@ -186,44 +153,7 @@ class CharacterExtractor(BaseExtractor):
         Returns:
             Dictionary with character details
         """
-        system_prompt = f"""You are analyzing a character named "{character_name}" from their first appearance in a TV show.
-
-        CRITICAL: You must return ONLY a valid JSON object. Do not include any explanatory text before or after the JSON.
-
-        Extract as much information as possible about this character from the given content:
-
-        1. Aliases/nicknames (other names they're called)
-        2. Role (protagonist, antagonist, supporting, minor, guest, recurring)
-        3. Physical description (if mentioned)
-        4. Occupation/job (if mentioned)
-        5. Age (if mentioned or can be estimated - return as STRING)
-        6. Background/history (if revealed)
-        7. Personality traits (what kind of person are they?)
-        8. Skills/abilities (what are they good at?)
-        9. Goals/motivations (what do they want?)
-        10. Fears/weaknesses (what are they afraid of or bad at?)
-        11. Character arc (what journey might they be on?)
-        12. Important quotes (memorable things they say)
-        13. Importance score (0.0-1.0, how important do they seem to the story?)
-
-        Return EXACTLY this JSON structure (replace values with your analysis):
-        {{
-          "aliases": ["Nickname1", "Nickname2"],
-          "role": "supporting",
-          "description": "Physical description or null",
-          "occupation": "Job description or null",
-          "age": "25" or null,
-          "background": "Background info or null",
-          "personality_traits": ["Trait1", "Trait2"],
-          "skills_abilities": ["Skill1", "Skill2"],
-          "goals_motivations": ["Goal1", "Goal2"],
-          "fears_weaknesses": ["Fear1", "Weakness1"],
-          "character_arc": "Arc description or null",
-          "important_quotes": ["Quote1", "Quote2"],
-          "importance_score": 0.7
-        }}
-
-        Use empty arrays [] for lists with no items, null for missing values, strings for age, and numbers for importance score."""
+        system_prompt = load_prompt_template("character_detail_extraction", character_name=character_name)
         
         user_prompt = f"""Analyze the character "{character_name}" from this content:
 
